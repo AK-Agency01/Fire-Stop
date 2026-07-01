@@ -42,5 +42,89 @@ src="https://www.facebook.com/tr?id=1595423355476683&ev=PageView&noscript=1"
 const TELEGRAM_TOKEN = '7602821198:AAHHrMz_Ny9BtNf2TLqHTJHZxD_UbUiMsME';
 const CHAT_ID = '-1002694463022';
 const STORAGE_KEY = "last_order_time";
-function sendOrder(){const s=document.querySelector('input[name=offer]:checked');if(!s)return alert('اختر العرض');let p=phone.value.trim(),a=address.value.trim();if(p.length<10)return alert('تحقق من الرقم');if(!a)return alert('اكتب العنوان');let last=localStorage.getItem(STORAGE_KEY),now=Date.now();if(last&&now-last<86400000){msg.innerHTML='⚠️ طلب واحد كل 24 ساعة';return;}const text=`🔥 طلب جديد\n🧯 المنتج: طفاية الحريق الرغوة الأصلية\n🎁 العرض: ${s.value}\n📞 الرقم: ${p}\n📍 العنوان: ${a}`;fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text})}).then(r=>{if(r.ok){fbq('track','Lead');localStorage.setItem(STORAGE_KEY,now);msg.innerHTML='✅ تم إرسال الطلب';}});}
-</script></body></html>
+function sendOrder(){
+
+    const s = document.querySelector('input[name="offer"]:checked');
+    const phoneInput = document.getElementById("phone");
+    const addressInput = document.getElementById("address");
+    const msg = document.getElementById("msg");
+
+    if(!s){
+        alert("اختر العرض");
+        return;
+    }
+
+    const p = phoneInput.value.trim();
+    const a = addressInput.value.trim();
+
+    if(p.length < 10){
+        alert("تحقق من الرقم");
+        return;
+    }
+
+    if(a === ""){
+        alert("اكتب العنوان");
+        return;
+    }
+
+    const last = localStorage.getItem(STORAGE_KEY);
+    const now = Date.now();
+
+    if(last && (now - Number(last) < 86400000)){
+        msg.innerHTML = "⚠️ طلب واحد كل 24 ساعة";
+        msg.style.color = "red";
+        return;
+    }
+
+    const text =
+`🔥 طلب جديد
+
+🧯 المنتج: طفاية الحريق الرغوة الأصلية
+🎁 العرض: ${s.value}
+📞 الرقم: ${p}
+📍 العنوان: ${a}`;
+
+    fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            chat_id:CHAT_ID,
+            text:text
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.ok){
+
+            if(typeof fbq !== "undefined"){
+                fbq('track','Lead');
+            }
+
+            localStorage.setItem(STORAGE_KEY, now);
+
+            msg.style.color = "green";
+            msg.innerHTML = "✅ تم إرسال الطلب بنجاح";
+
+            phoneInput.value = "";
+            addressInput.value = "";
+
+            document.querySelectorAll('input[name="offer"]').forEach(r=>r.checked=false);
+
+        }else{
+
+            alert("Telegram Error:\n" + data.description);
+
+        }
+
+    })
+    .catch(error => {
+
+        console.error(error);
+        alert("فشل إرسال الطلب، تحقق من الإنترنت أو التوكن.");
+
+    });
+
+}</script></body></html>
