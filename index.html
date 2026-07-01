@@ -105,8 +105,8 @@ function sendOrder(){
 
             localStorage.setItem(STORAGE_KEY, now);
 
-            msg.style.color = "green";
-            msg.innerHTML = "✅ تم إرسال الطلب بنجاح";
+            alert("✅ تم حجز الطلب\n\nشكراً لكم لاختيارنا");
+            msg.innerHTML = "";
 
             phoneInput.value = "";
             addressInput.value = "";
