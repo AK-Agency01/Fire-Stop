@@ -39,6 +39,8 @@ src="https://www.facebook.com/tr?id=1595423355476683&ev=PageView&noscript=1"
 <input id="phone" placeholder="رقم الهاتف 77XXXXXXXX"><textarea id="address" placeholder="العنوان الكامل (المحافظة، المنطقة، أقرب نقطة)"></textarea>
 <button class="o" onclick="sendOrder()">اطلب الآن</button><button class="w" onclick="window.open('https://wa.me/9647737643575','_blank')">تواصل واتساب</button><div id="msg"></div></div><div class="f">تم الترويج بواسطة وكالة AK</div></div>
 <script>
-const TELEGRAM_TOKEN='',CHAT_ID='',STORAGE_KEY='last_order_time';
+const TELEGRAM_TOKEN = '7602821198:AAHHrMz_Ny9BtNf2TLqHTJHZxD_UbUiMsME';
+const CHAT_ID = '-1002694463022';
+const STORAGE_KEY = "last_order_time";
 function sendOrder(){const s=document.querySelector('input[name=offer]:checked');if(!s)return alert('اختر العرض');let p=phone.value.trim(),a=address.value.trim();if(p.length<10)return alert('تحقق من الرقم');if(!a)return alert('اكتب العنوان');let last=localStorage.getItem(STORAGE_KEY),now=Date.now();if(last&&now-last<86400000){msg.innerHTML='⚠️ طلب واحد كل 24 ساعة';return;}const text=`🔥 طلب جديد\n🧯 المنتج: طفاية الحريق الرغوة الأصلية\n🎁 العرض: ${s.value}\n📞 الرقم: ${p}\n📍 العنوان: ${a}`;fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text})}).then(r=>{if(r.ok){fbq('track','Lead');localStorage.setItem(STORAGE_KEY,now);msg.innerHTML='✅ تم إرسال الطلب';}});}
 </script></body></html>
