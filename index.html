@@ -6,7 +6,7 @@ img.product{width:100%;border-radius:16px;margin:15px 0;box-shadow:0 4px 10px rg
 .card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
 .offer-box{border:1px solid #ddd;border-radius:12px;overflow:hidden;margin-bottom:12px}.offer-title{text-align:center;padding:10px;background:#fafafa;font-weight:bold}
 .offer-item{display:flex;align-items:center;padding:14px;border-top:1px solid #eee;cursor:pointer}.offer-item input{display:none}.radio{width:20px;height:20px;border:2px solid #bbb;border-radius:50%;margin-left:10px;position:relative;flex:none}.offer-item input:checked+.radio{border-color:#d32f2f}.offer-item input:checked+.radio:after{content:"";position:absolute;width:10px;height:10px;background:#d32f2f;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
-input,textarea,button{width:100%;box-sizing:border-box;padding:13px;border-radius:10px;font-size:15px;margin:10px 0}input,textarea{border:1px solid #ccc}button{border:0;color:#fff;font-weight:bold}.o{background:#d32f2f}.w{background:#25d366}.f{text-align:center;color:#777;font-size:12px;margin-top:15px}
+input,textarea,button{width:100%;box-sizing:border-box;padding:13px;border-radius:10px;font-size:15px;margin:10px 0}input,textarea{border:1px solid #ccc}button{border:0;color:#fff;font-weight:bold}.o{background:#d32f2f}.w{background:#25d366}button{transition:.15s ease}button:active{transform:scale(.96)}button:disabled{opacity:.7;cursor:not-allowed}.f{text-align:center;color:#777;font-size:12px;margin-top:15px}
 .whatsapp-float{position:fixed;top:72%;left:18px;right:auto;transform:translateY(-50%);width:60px;height:60px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 15px rgba(0,0,0,.25);z-index:9999;text-decoration:none}
 .whatsapp-float:hover{transform:translateY(-50%) scale(1.08)}
 .whatsapp-float svg{width:32px;height:32px;fill:#fff}
@@ -42,7 +42,10 @@ src="https://www.facebook.com/tr?id=1595423355476683&ev=PageView&noscript=1"
 const TELEGRAM_TOKEN = '7602821198:AAHHrMz_Ny9BtNf2TLqHTJHZxD_UbUiMsME';
 const CHAT_ID = '-1002694463022';
 const STORAGE_KEY = "last_order_time";
+let sending=false;
 function sendOrder(){
+if(sending)return;
+const orderBtn=document.querySelector('.o');
 
     const s = document.querySelector('input[name="offer"]:checked');
     const phoneInput = document.getElementById("phone");
@@ -76,6 +79,8 @@ function sendOrder(){
         return;
     }
 
+    orderBtn.disabled=true;orderBtn.textContent='⏳ جاري إرسال الطلب...';sending=true;
+
     const text =
 `🔥 طلب جديد
 
@@ -105,8 +110,7 @@ function sendOrder(){
 
             localStorage.setItem(STORAGE_KEY, now);
 
-            alert("✅ تم حجز الطلب\n\nشكراً لكم لاختيارنا");
-            msg.innerHTML = "";
+            window.location.href="success.html";
 
             phoneInput.value = "";
             addressInput.value = "";
@@ -115,7 +119,7 @@ function sendOrder(){
 
         }else{
 
-            alert("Telegram Error:\n" + data.description);
+            sending=false;orderBtn.disabled=false;orderBtn.textContent='اطلب الآن';alert('Telegram Error');
 
         }
 
@@ -123,7 +127,7 @@ function sendOrder(){
     .catch(error => {
 
         console.error(error);
-        alert("فشل إرسال الطلب، تحقق من الإنترنت أو التوكن.");
+        sending=false;orderBtn.disabled=false;orderBtn.textContent='اطلب الآن';alert('فشل إرسال الطلب');
 
     });
 
