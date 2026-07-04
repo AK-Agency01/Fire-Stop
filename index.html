@@ -42,13 +42,14 @@ ttq.load('D93R0UBC77U7HJS4Q84G');ttq.page();
 <div class="c"><div class="top">🚚 التوصيل مجاني لجميع محافظات العراق</div>
 <h2 style="text-align:center">طفاية الحريق الرغوة الأصلية</h2><p style="text-align:center">احمِ سيارتك ومنزلك بطفاية حريق رغوية سهلة الاستخدام وفعالة.</p>
 <div class="card"><div class="offer-box"><div class="offer-title">اختر العرض</div>
-<label class="offer-item"><input type="radio" name="offer" value="قطعتين بـ15 ألف والتوصيل مجاني"><span class="radio"></span><span>قطعتين بـ15 ألف والتوصيل مجاني</span></label>
-<label class="offer-item"><input type="radio" name="offer" value="4 قطع بـ25 ألف والتوصيل مجاني"><span class="radio"></span><span>4 قطع بـ25 ألف والتوصيل مجاني</span></label></div>
+<label class="offer-item"><input type="radio" name="offer" value="قطعتين بـ15 ألف والتوصيل مجاني" onchange="selectOffer(15000)"><span class="radio"></span><span>قطعتين بـ15 ألف والتوصيل مجاني</span></label>
+<label class="offer-item"><input type="radio" name="offer" value="4 قطع بـ25 ألف والتوصيل مجاني" onchange="selectOffer(25000)"><span class="radio"></span><span>4 قطع بـ25 ألف والتوصيل مجاني</span></label></div>
 <input id="phone" placeholder="رقم الهاتف 77XXXXXXXX"><textarea id="address" placeholder="العنوان الكامل (المحافظة، المنطقة، أقرب نقطة)"></textarea>
 <button class="o" onclick="sendOrder()">اطلب الآن</button><button class="w" onclick="trackWhatsApp()">تواصل واتساب</button><div id="msg"></div></div><img class="product" src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//catalog-image/101/MTA-149227606/kenmaster_kenmaster_pemadam_api_fire_stop_400ml_extinguisher_portable_mobil_full11_q4d5v5vw.jpg">
 <div class="f">تم الترويج بواسطة وكالة AK</div></div>
 <script>
 function trackWhatsApp(){if(typeof fbq!=='undefined')fbq('track','Contact');if(typeof ttq!=='undefined')ttq.track('Contact');window.location.href='https://wa.me/9647737643575';}
+let selectedPrice=0;function selectOffer(price){selectedPrice=price;localStorage.setItem('purchaseValue',price);if(typeof fbq!=='undefined')fbq('track','AddToCart',{value:price,currency:'IQD'});if(typeof ttq!=='undefined')ttq.track('AddToCart',{value:price,currency:'IQD'});} 
 const TELEGRAM_TOKEN = '7602821198:AAHHrMz_Ny9BtNf2TLqHTJHZxD_UbUiMsME';
 const CHAT_ID = '-1002694463022';
 const STORAGE_KEY = "last_order_time";
@@ -89,7 +90,7 @@ const orderBtn=document.querySelector('.o');
         return;
     }
 
-    orderBtn.disabled=true;orderBtn.textContent='⏳ جاري إرسال الطلب...';sending=true;
+    if(typeof fbq!=='undefined')fbq('track','InitiateCheckout',{value:selectedPrice,currency:'IQD'});if(typeof ttq!=='undefined')ttq.track('InitiateCheckout',{value:selectedPrice,currency:'IQD'});orderBtn.disabled=true;orderBtn.textContent='⏳ جاري إرسال الطلب...';sending=true;
 
     const text =
 `🔥 طلب جديد
